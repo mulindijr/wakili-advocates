@@ -2,7 +2,7 @@ const SectionWrapper = ({ id, bgColor, children }) => {
   const sectionTitles = {
     'about-us': { subtitle: "WHO WE ARE", title: "Wakili Advocates LLP" },
     'practice-areas': { subtitle: "OUR SPECIALTIES", title: "Legal Practice Areas" },
-    'our-lawyers': { subtitle: "MEET OUR TEAM", title: "Our Legal Experts" },
+    'our-lawyers': { subtitle: "MEET OUR TEAM", title: "Our Featured Experts" },
     testimonials: { subtitle: "CLIENT TESTIMONIALS", title: "What Our Clients Say" },
     contact: { subtitle: "GET IN TOUCH", title: "Contact Wakili Advocates" }
   };
