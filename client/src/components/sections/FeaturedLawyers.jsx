@@ -1,25 +1,48 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaCalendar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import SectionWrapper from '../ui/SectionWrapper';
 import { featuredLawyers } from '../../data/team';
 import Card from '../ui/Card';
 
+// Hook to track screen width and adjust cardsToShow
+const useResponsiveCardsToShow = () => {
+  const [cardsToShow, setCardsToShow] = useState(3);
+
+  useEffect(() => {
+    const updateCardsToShow = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setCardsToShow(1); // Mobile
+      } else if (width < 1024) {
+        setCardsToShow(2); // Tablet
+      } else {
+        setCardsToShow(3); // Desktop
+      }
+    };
+
+    updateCardsToShow();
+    window.addEventListener('resize', updateCardsToShow);
+    return () => window.removeEventListener('resize', updateCardsToShow);
+  }, []);
+
+  return cardsToShow;
+};
+
 const Team = () => {
-  const cardsToShow = 3;
+  const cardsToShow = useResponsiveCardsToShow();
   const total = featuredLawyers.length;
-  const maxIndex = total - cardsToShow;
+  const maxIndex = Math.max(total - cardsToShow, 0);
 
   const [startIndex, setStartIndex] = useState(0);
 
   const next = () => {
-    setStartIndex((prev) => prev >= maxIndex ? 0 : prev + 1);
+    setStartIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
   const prev = () => {
-     setStartIndex((prev) => prev <= 0 ? maxIndex : prev - 1);
+    setStartIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
-  // how far to shift
   const shiftPct = (100 / cardsToShow) * startIndex;
 
   return (
@@ -31,14 +54,14 @@ const Team = () => {
           disabled={startIndex === 0}
           className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-indigo-700 p-2 rounded-full shadow hover:bg-indigo-900 cursor-pointer disabled:opacity-40"
         >
-          <FaChevronLeft className='text-white'/>
+          <FaChevronLeft className="text-white" />
         </button>
         <button
           onClick={next}
           disabled={startIndex === maxIndex}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-indigo-700 p-2 rounded-full shadow hover:bg-indigo-900 cursor-pointer disabled:opacity-40"
         >
-          <FaChevronRight className='text-white'/>
+          <FaChevronRight className="text-white" />
         </button>
 
         {/* sliding track */}
@@ -47,7 +70,7 @@ const Team = () => {
           style={{ transform: `translateX(-${shiftPct}%)` }}
         >
           {featuredLawyers.map((lawyer, idx) => (
-            <div key={idx} className="flex-none w-1/3 px-3">
+            <div key={idx} className={`flex-none px-3 w-full sm:w-1/2 lg:w-1/3`}>
               <Card>
                 <div className="relative">
                   <img
